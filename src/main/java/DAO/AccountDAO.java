@@ -18,11 +18,29 @@ public class AccountDAO {
                 int generated_user_id = (int) pkeyResultSet.getLong(1);
                 return new Account(generated_user_id, account.getUsername(), account.getPassword());
             } 
-        }   catch (SQLException e){
+        }   catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
-    
+    public Account getAccountByUsernamePassword (Account account) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()) {
+                Account user = new Account(rs.getInt("account_id"), 
+                                            rs.getString("username"),
+                                            rs.getString("password"));
+                return user;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }

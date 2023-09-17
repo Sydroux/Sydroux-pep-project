@@ -15,6 +15,9 @@ public class AccountService {
     }
 
     public Account registerAccount(Account account) {
+        /*if (accountDAO.getAccountByUsernamePassword(account) != null) {
+            return null;
+        }*/
         return accountDAO.registerAccount(account);
     }
 
