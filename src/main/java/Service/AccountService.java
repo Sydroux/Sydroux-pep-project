@@ -21,4 +21,8 @@ public class AccountService {
     public Account loginAttempt(Account account) {
         return accountDAO.getAccountByUsernamePassword(account);
     }
+
+    public Account checkForUser(int id) {
+        return accountDAO.getAccountById(id);
+    }
 }

@@ -1,8 +1,8 @@
 package Service;
 
 import DAO.MessageDAO;
-import Model.Account;
 import Model.Message;
+import java.util.List;
 
 public class MessageService {
     private MessageDAO messageDAO;
@@ -15,7 +15,19 @@ public class MessageService {
         this.messageDAO = messageDAO;
     }
 
-    public Message createMessage(Message message, Account account) {
-        return messageDAO.createMessage(message, account);
+    public Message createMessage(Message message) {
+        return messageDAO.createMessage(message);
+    }
+
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
+    }
+
+    public Message getMessageById(int id) {
+        return messageDAO.getMessageById(id);
+    }
+
+    public Message deleteMessage(int id) {
+        return messageDAO.deleteMessage(id);
     }
 }
