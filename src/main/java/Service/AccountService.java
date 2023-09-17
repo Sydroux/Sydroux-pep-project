@@ -15,11 +15,10 @@ public class AccountService {
     }
 
     public Account registerAccount(Account account) {
-        /*if (accountDAO.getAccountByUsernamePassword(account) != null) {
-            return null;
-        }*/
         return accountDAO.registerAccount(account);
     }
 
-    
+    public Account loginAttempt(Account account) {
+        return accountDAO.getAccountByUsernamePassword(account);
+    }
 }

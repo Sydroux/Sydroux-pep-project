@@ -18,7 +18,7 @@ public class AccountDAO {
                 int generated_user_id = (int) pkeyResultSet.getLong(1);
                 return new Account(generated_user_id, account.getUsername(), account.getPassword());
             } 
-        }   catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return null;
