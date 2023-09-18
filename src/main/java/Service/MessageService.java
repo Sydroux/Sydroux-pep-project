@@ -23,11 +23,19 @@ public class MessageService {
         return messageDAO.getAllMessages();
     }
 
-    public Message getMessageById(int id) {
-        return messageDAO.getMessageById(id);
+    public Message getMessageById(int messageid) {
+        return messageDAO.getMessageById(messageid);
     }
 
-    public Message deleteMessage(int id) {
-        return messageDAO.deleteMessage(id);
+    public Message deleteMessage(int messageid) {
+        return messageDAO.deleteMessage(messageid);
+    }
+
+    public Message updateMessage(int messageid, String newtext) {
+        return messageDAO.updateMessage(messageid, newtext);
+    }
+
+    public List<Message> getUserMessages(int accountid) {
+        return messageDAO.getUserMessages(accountid);
     }
 }

@@ -38,8 +38,8 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageHandler);
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
-        //app.patch("/messages/{message_id}", this::updateMessageHandler);
-        //app.get("/accounts/{account_id}/messages", this::getUserMessagesHandler);
+        app.patch("/messages/{message_id}", this::updateMessageHandler);
+        app.get("/accounts/{account_id}/messages", this::getUserMessagesHandler);
         return app;
     }
 
@@ -58,7 +58,7 @@ public class SocialMediaController {
         if (registeredaccount != null 
         && !registeredaccount.getUsername().isBlank() 
         && registeredaccount.getPassword().length() >= 4) {
-            ctx.json(mapper.writeValueAsString(registeredaccount));
+            ctx.json(registeredaccount);
         } else {
             ctx.status(400);
         }
@@ -69,7 +69,7 @@ public class SocialMediaController {
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account logincred = accountService.loginAttempt(account);
         if (logincred != null) {
-            ctx.json(mapper.writeValueAsString(logincred));
+            ctx.json(logincred);
         } else {
             ctx.status(401);
         }
@@ -83,7 +83,7 @@ public class SocialMediaController {
         && !postedmessage.getMessage_text().isBlank() 
         && postedmessage.getMessage_text().length() < 255 
         && accountService.checkForUser(postedmessage.getPosted_by()) != null) {
-            ctx.json(mapper.writeValueAsString(postedmessage));
+            ctx.json(postedmessage);
         } else {
             ctx.status(400);
         }
@@ -106,11 +106,34 @@ public class SocialMediaController {
 
     private void deleteMessageHandler (Context ctx) throws JsonProcessingException {
         String[] splitpath = ctx.path().split("/");
-        Message messagecheck = messageService.deleteMessage(Integer.parseInt(splitpath[splitpath.length - 1]));
-        if (messagecheck != null) {
-            ctx.json(messagecheck);
+        Message messagedel = messageService.getMessageById(Integer.parseInt(splitpath[splitpath.length - 1]));
+        if (messagedel != null) {
+            messageService.deleteMessage(messagedel.getMessage_id());
+            ctx.json(messagedel);
         } else {
             ctx.status(200);
         }
+    }
+
+    private void updateMessageHandler (Context ctx) throws JsonProcessingException {
+        String[] splitpath = ctx.path().split("/");
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message messagecheck = messageService.getMessageById(Integer.parseInt(splitpath[splitpath.length - 1]));
+        if (messagecheck != null
+            && message.getMessage_text().length() < 255
+            && !message.getMessage_text().isBlank()) {
+                messageService.updateMessage(Integer.parseInt(splitpath[splitpath.length - 1]), message.getMessage_text());
+                Message editedmessage = messageService.getMessageById(Integer.parseInt(splitpath[splitpath.length - 1]));
+                ctx.json(editedmessage);
+            } else {
+                ctx.status(400);
+            }
+    }
+
+    private void getUserMessagesHandler (Context ctx) throws JsonProcessingException {
+        String[] splitpath = ctx.path().split("/");
+        List<Message> usermessages = messageService.getUserMessages(Integer.parseInt(splitpath[splitpath.length - 2]));
+        ctx.json(usermessages);
     }
 }

@@ -22,7 +22,7 @@ public class AccountService {
         return accountDAO.getAccountByUsernamePassword(account);
     }
 
-    public Account checkForUser(int id) {
-        return accountDAO.getAccountById(id);
+    public Account checkForUser(int accountid) {
+        return accountDAO.getAccountById(accountid);
     }
 }
